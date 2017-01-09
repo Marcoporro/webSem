@@ -1,0 +1,20 @@
+L'attribut action permet de donner le lien vers le fichier PHP à exécuter
+L'attribut method permet de définir la fonction du formulaire.
+=> On peut lui attribuer ces options: POST/ GET/ HEAD/ PUT/ DELETE/ TRACE/ CONNECT
+
+Name permet de donner un nom qui sera ré-utilisé, par exemple en PHP.
+ID permet de lui attribuer un nom afin de pouvoir le modifier en CSS (.ID {})
+C'est l'ID qui doit être repris par le for du label.
+
+L'attribut title est affiché 1/ Au passage du curseur 2/ Lorsque l'on remplit mal l'input et que l'on le soumet au formulaire
+Encore une fois,
+Name permet de donner un nom qui sera ré-utilisé, par exemple en PHP.
+ID permet de lui attribuer un nom afin de pouvoir le modifier en CSS (.ID {})
+
+La confirmation du mot de passe n'a pas d'attribut nom parce qu'il est sûrement considéré comme le mot de passe au dessus.
+
+La justification de l'utilisation de cette fonction est le fait que l'on doit vérifier que le mot de passe confirmé est égal au mot de passe.
+
+L'attribut disable sert à ne pas pouvoir saisir du texte dans le champ texte.
+
+
