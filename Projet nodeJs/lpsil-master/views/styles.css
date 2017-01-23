@@ -145,12 +145,4 @@ body {font: 14px/21px "Lucida Sans", "Lucida Grande", "Lucida Sans Unicode", san
     -o-box-shadow: 0 0 10px 5px #356b0b inset;
 
 }
-#paint{
-	display: flex;
-	justify-content: center;
-	background-color:gray;
-}
-#myCanvas{
-	background-color:white;
-}
 

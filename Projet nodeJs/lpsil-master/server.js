@@ -66,12 +66,43 @@ app.post('/req_inscription', function (req, res) {
 
 });
 
+app.post('/req_modif', function (req, res) {
+    var nom = req.body.nom;
+    var prenom = req.body.prenom;
+    var taille = req.body.taille;
+    var tel = req.body.tel;
+    var ville = req.body.ville;
+    var site = req.body.website;
+    var photo = req.body.profilepic;
+    var couleur = req.body.couleur;
+
+
+    modifierProfil(nom,prenom,taille,tel,ville,site,photo,couleur,res);
+
+});
+
+app.post('/paint', function (req, res) {
+    var dest = req.body.destinataire;
+    var mot = req.body.mot;
+    var picture = req.body.picture;
+
+    envoyerPicture(dest,mot,picture,res);
+
+});
+
 
 app.get('/inscription', function (req, res) {
     res.render('register');
 });
 app.get('/main', function (req, res) {
-    res.render('main');
+    res.render('main', {
+            photo: sess.photo,
+            nom: sess.nom,
+            prenom: sess.prenom,
+            email: sess.email,
+            id:  sess.id
+        }
+    );
 });
 
 
@@ -80,6 +111,15 @@ app.get('/profile', function (req, res) {
     // TODO
     // On redirige vers la login si l'utilisateur n'a pas été authentifier
     // Afficher le button logout
+});
+
+app.get('/modifProfil', function (req, res) {
+
+    res.render('modifProfil');
+});
+app.get('/paint', function (req, res) {
+
+    res.render('paint');
 });
 
 
@@ -141,7 +181,12 @@ function verif(username,mdp,res){
                              if (rows.length > 0){
                                  logger.info('mot de passe valide');
                                  sess.open=true;
-                                 res.render('main');
+                                 sess.id = rows[0].id;
+                                 sess.photo=rows[0].profilepic;
+                                 sess.nom=rows[0].nom;
+                                 sess.prenom=rows[0].prenom;
+                                 sess.email=rows[0].email;
+                                res.redirect('/main');
 
                              }
                              else{
@@ -172,7 +217,69 @@ function inscrireNouveau(email,nom,prenom,sexe,taille,tel,ville,site,mdp,dn,phot
 
                     logger.info('ca compile');
                     sess.open=true;
-                    res.render('main');
+                    res.redirect('main');
+
+
+            }
+            else
+            {
+                logger.info('raté ');
+                throw  err;
+
+            }
+
+
+        });
+
+
+
+    });
+
+}
+
+function modifierProfil(nom,prenom,taille,tel,ville,site,photo,couleur,res){
+
+
+    pool.getConnection(function(err,connection){
+
+        connection.query("UPDATE users SET nom ='"+nom+"', prenom='"+prenom+"', tel='"+tel+"' , website='"+site+"', ville='"+ville+"', taille="+taille+", couleur='"+couleur+"', profilepic='"+photo+"' WHERE id='"+sess.id+"' ",function(err,result){
+            if(!err) {
+
+                logger.info('ca compile');
+
+                sess.photo=photo;
+                sess.nom=nom;
+                sess.prenom=prenom;
+                res.redirect('main');
+
+
+            }
+            else
+            {
+                logger.info('raté ');
+                throw  err;
+
+            }
+
+
+        });
+
+
+
+    });
+
+}
+
+function envoyerPicture(dest,mot,picture,res){
+
+
+    pool.getConnection(function(err,connection){
+
+        connection.query("INSERT INTO paint (mailUn, mailDeux, mot, picture) VALUES ('"+dest+"','"+sess.email+"','"+mot+"','"+picture+"')",function(err,result){
+            if(!err) {
+
+                logger.info('ca compile');
+                res.redirect('main');
 
 
             }
