@@ -95,14 +95,16 @@ app.get('/inscription', function (req, res) {
     res.render('register');
 });
 app.get('/main', function (req, res) {
+
     res.render('main', {
             photo: sess.photo,
             nom: sess.nom,
             prenom: sess.prenom,
             email: sess.email,
-            id:  sess.id
+            id:  sess.id,
         }
     );
+
 });
 
 
