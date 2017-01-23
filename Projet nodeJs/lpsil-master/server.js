@@ -2,6 +2,7 @@ var express = require('express');
 var morgan = require('morgan'); // Charge le middleware de logging
 var favicon = require('serve-favicon'); // Charge le middleware de favicon
 var bodyParser = require('body-parser');
+var session =require('express-session');
 
 
 var logger = require('log4js').getLogger('Server');
@@ -22,6 +23,12 @@ app.set('views', __dirname + '/views');
 
 /* On affiche le formulaire d'enregistrement */
 
+var sess ={
+    secret:'keyboard cat'
+
+}
+app.use(session(sess))
+
 app.get('/', function(req, res){
     res.redirect('/login');
 });
@@ -34,7 +41,7 @@ app.get('/login', function(req, res){
 app.post('/login', function (req, res) {
     var username = req.body.username;
     var mdp = req.body.password;
-    verif(username,mdp);
+    verif(username,mdp,res);
 
 
 });
@@ -54,7 +61,7 @@ app.post('/req_inscription', function (req, res) {
 
 
 
-    inscrireNouveau(email,nom,prenom,sexe,taille,tel,ville,site,mdp,dn,photo,couleur);
+    inscrireNouveau(email,nom,prenom,sexe,taille,tel,ville,site,mdp,dn,photo,couleur,res);
 
 
 });
@@ -119,7 +126,7 @@ var pool =  mysql.createPool({
     });
 });*/
 
-function verif(username,mdp){
+function verif(username,mdp,res){
 
     pool.getConnection(function(err,connection){
 
@@ -133,6 +140,9 @@ function verif(username,mdp){
                          if (!err) {
                              if (rows.length > 0){
                                  logger.info('mot de passe valide');
+                                 sess.open=true;
+                                 res.render('main');
+
                              }
                              else{
                                  logger.info('mot de passe non valide');
@@ -152,7 +162,7 @@ function verif(username,mdp){
 
     });
 }
-function inscrireNouveau(email,nom,prenom,sexe,taille,tel,ville,site,mdp,dn,photo,couleur){
+function inscrireNouveau(email,nom,prenom,sexe,taille,tel,ville,site,mdp,dn,photo,couleur,res){
 
 
     pool.getConnection(function(err,connection){
@@ -161,7 +171,9 @@ function inscrireNouveau(email,nom,prenom,sexe,taille,tel,ville,site,mdp,dn,phot
             if(!err) {
 
                     logger.info('ca compile');
+                    sess.open=true;
                     res.render('main');
+
 
             }
             else
